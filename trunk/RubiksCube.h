@@ -4,7 +4,7 @@
 #include "Cubelet.h"
 #include "Solver.cpp"
 
-#define TURN_TIME 3
+#define TURN_TIME 0.3
 
 class RubiksCube {
 private:

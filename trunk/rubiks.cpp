@@ -17,108 +17,25 @@
 
 int main(int argc, char** argv)
 {
-    	CubeFinder finder;
-    	cvNamedWindow("Rubiks", 1);
-    cvShowImage("Rubiks", finder.read_frame(cvLoadImage("cube3.jpg", 1)));
-    cvWaitKey(0);
-    //CvCapture* capture = cvCaptureFromCAM( CV_CAP_ANY );
-    return 0;
-    /*
-    CubeFinder finder;
-    cvNamedWindow( "Rubiks", 1 );
+    RubiksCube cube;
+    srand((unsigned)time(NULL));
     
-    cvWaitKey(0);
-    //cvShowImage("Rubiks", finder.read_frame(cvLoadImage("test/pair2b.jpg", 1)));
-    //cvWaitKey(0);
-*/
-	printf("Starting...\n");
-	RubiksCube cube;
-	
-
-
-	bool running = true;
-	
-    CvCapture* capture = cvCaptureFromCAM( 0 );
-	cvSetCaptureProperty( capture, CV_CAP_PROP_FRAME_WIDTH, 640 );
-	cvSetCaptureProperty( capture, CV_CAP_PROP_FRAME_HEIGHT, 480 );
-	// read in the cube state
-	
-	while(running) {
-		// Get one frame
-        IplImage* cframe = cvQueryFrame( capture );
-        
-        if( !cframe ) {
-            fprintf( stderr, "ERROR: frame is null...\n" );
-            getchar();
-            break;
+	// create a solved cube
+    for(int i = 0; i < 6; i++) {
+        Side s;
+        for(int x = 0; x < 3; x++) {
+            for(int y = 0; y < 3; y++) {
+                s.face[x][y] = i;
+            }
         }
+        cube.read_side(&s);
+    }
+    cube.update();
 
-		cvShowImage( "Rubiks", finder.read_frame(cframe) );
-
-
-        if( (cvWaitKey(10) & 255) == 27 ) running = false;
-		
-	}
-	return 0;
-	
-	/*
-	
-	
-	RubiksCube cube;
-	Side s1, s2, s3, s4, s5, s6;
-	// enum Colours { RED, YELLOW, GREEN, ORANGE, WHITE, BLUE};
-	int f1[3][3] = {
-		{1, 5, 0},
-		{5, 1, 4},
-		{4, 3, 1}
-	};
-	int f2[3][3]= {
-		{2, 2, 5},
-		{0, 5, 4},
-		{3, 0, 4}
-	};
-	int f3[3][3] ={
-		{4, 0, 1},
-		{2, 4, 2},
-		{2, 3, 4}
-	};
-	int f4[3][3] ={
-        {5, 4, 5},
-        {1, 2, 3},
-        {3, 5, 2}
-	};
-	int f5[3][3] ={
-		{0, 0, 1},
-		{5, 0, 4},
-		{0, 3, 3}
-	};
-	int f6[3][3] ={
-		{5, 1, 0},
-		{2, 3, 1},
-		{3, 1, 2}
-	};
-
-	for(int i = 0; i < 3; i++) {
-		for(int j = 0; j < 3; j++) {
-			s1.face[i][j] = f1[i][j];
-			s2.face[i][j] = f2[i][j];
-			s3.face[i][j] = f3[i][j];
-			s4.face[i][j] = f4[i][j];
-			s5.face[i][j] = f5[i][j];
-			s6.face[i][j] = f6[i][j];
-		}
-	}
-    
-	cube.read_side(&s1);
-	cube.read_side(&s2);
-	cube.read_side(&s3);
-	cube.read_side(&s4);
-	cube.read_side(&s5);
-	cube.read_side(&s6);
-	
-	cube.update();
-	cube.align_sides();
-	
+    // scramble the cube
+    for(int d = 0; d < 100; d++) {
+        cube.RotateSide((int)rand()%6, 90);
+    }
     printf("%s\n",cube.get_notation());
     
     //cube.solve();
@@ -130,7 +47,6 @@ int main(int argc, char** argv)
 
     phi = 10;
     theta = 0.4;
-    
     
     cube.solve();
 
@@ -212,7 +128,7 @@ int main(int argc, char** argv)
     
     
     SDL_Quit();
-    */
+
     return 0;
 
 }
