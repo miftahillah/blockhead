@@ -490,6 +490,13 @@ void RubiksCube::ShowNextMove() {
     }
 }
 
+bool RubiksCube::FinishedSolve() {
+    if(s.solution[m_current_step] == -1 && !m_moving) {
+        return true;
+    }
+    return false;
+}
+
 void RubiksCube::solve() {
     s = solve_main(get_notation());
     
@@ -508,6 +515,10 @@ void RubiksCube::solve() {
     m_current_step = 0;
 }
 
+bool RubiksCube::Moving() {
+    return m_moving;
+}
+
 void RubiksCube::UpdatePositions() {
     if(m_moving) {
         struct timeval m_tv;
@@ -520,7 +531,7 @@ void RubiksCube::UpdatePositions() {
         } else {
             diff = new_time - m_start_time;
         }
-        int turns = floor(diff*90/(1000000*TURN_TIME));
+        int turns = floor(diff*90/(1000000*m_duration));
         if(turns > 0) {
             
             if((m_angle + turns) >= 90*m_times) {
@@ -531,7 +542,7 @@ void RubiksCube::UpdatePositions() {
             m_angle+= turns;
             // update start time
             // include diff so there is no accumilated error
-            m_start_time = m_start_time + turns*(1000000*TURN_TIME/90);
+            m_start_time = m_start_time + turns*(1000000*m_duration/90);
 			if(m_start_time > 1000000) {
 				m_start_time = 1000000 - m_start_time;
 			}
@@ -544,7 +555,8 @@ void RubiksCube::UpdatePositions() {
     }
 }
 
-void RubiksCube::ShowMove(char* m) {
+void RubiksCube::ShowMove(char* m, double duration) {
+    m_duration = duration;
     // m takes form 'R2'
     // first character describes the face to turn
     // second describes how to turn it
@@ -563,7 +575,7 @@ void RubiksCube::ShowMove(char* m) {
             m_dir = 1;
             break;
     }
-    printf("m = %s dir = %d t = %d\n", m, m_dir, m_times);
+    //printf("m = %s dir = %d t = %d\n", m, m_dir, m_times);
     if(m[0] == 'R' || m[0] == 'B' || m[0] == 'U') {
         m_dir *= -1;
     }
@@ -575,6 +587,10 @@ void RubiksCube::ShowMove(char* m) {
     gettimeofday(&m_tv, NULL);
     m_start_time = m_tv.tv_usec;
     return;
+}
+
+void RubiksCube::ShowMove(char* m) {
+    ShowMove(m, TURN_TIME);
 }
 
 void RubiksCube::ShowMove(int move) {
@@ -741,4 +757,18 @@ void RubiksCube::RotateSide(int side, int angle) {
             }
         }
     }
+}
+
+bool RubiksCube::defined() {
+    for(int s = 0; s < 6; s++) {
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                if(side[s]->face[i][j] == -1) {
+                    return false;
+                }
+            }
+        }
+    }
+    
+    return true;
 }

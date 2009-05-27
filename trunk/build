@@ -1,1 +1,1 @@
-g++ -g -bind_at_load -framework OpenGL -framework Cocoa `pkg-config --cflags opencv` rubiks.cpp -o rubiks `pkg-config --libs opencv sdl` && ./rubiks cube6.jpg
+g++ -g -bind_at_load -framework OpenGL -framework Cocoa `pkg-config --cflags opencv` rubiks.cpp -o rubiks `pkg-config --libs opencv sdl` -I '/opt/local/include'  && ./rubiks cube6.jpg

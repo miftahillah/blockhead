@@ -4,7 +4,7 @@
 #include "Cubelet.h"
 #include "Solver.cpp"
 
-#define TURN_TIME 0.3
+#define TURN_TIME 0.6
 
 class RubiksCube {
 private:
@@ -20,6 +20,7 @@ private:
     int m_times;
     int m_counter;
     int m_current_step;
+    double m_duration;
     Solution s;
     
 public:
@@ -40,11 +41,16 @@ public:
     
     void ShowMove(int move);
     void ShowMove(char *m);
+    void ShowMove(char* m, double duration);
     void UpdatePositions();
     
     void ShowNextMove();
     void RotateSide(int side, int degrees);
+    bool FinishedSolve();
 
 	void StepForward();
 	void StepBack();
+	
+    bool Moving();
+    bool defined();
 };

@@ -31,12 +31,6 @@ int main(int argc, char** argv)
         cube.read_side(&s);
     }
     cube.update();
-
-    // scramble the cube
-    for(int d = 0; d < 100; d++) {
-        cube.RotateSide((int)rand()%6, 90);
-    }
-    printf("%s\n",cube.get_notation());
     
     //cube.solve();
     //cube.xRot[0] = 45;
@@ -47,30 +41,117 @@ int main(int argc, char** argv)
 
     phi = 10;
     theta = 0.4;
-    
-    cube.solve();
 
 	bool solving = false;
 	bool running = true;
+    bool demo = false;
+    bool scrambling = false;
+    bool scramble_next = true;
+    bool panning = true;
+    bool capturing = false;
+    bool capturing_demo = false;
+    int scram = 0, pan = 0;
+    
+    bool initialised = true;
+    
+    CubeFinder f;
+    
+    CvCapture* capture = cvCaptureFromCAM( CV_CAP_ANY );
+    
 	while (running)
     {
+        
 	    SDL_Event event;
 		int xrel, yrel;
 		glClearColor(1, 1, 1,0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		glLoadIdentity();	
+		//glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 		gluLookAt(7*sin(phi)*cos(theta),-7*cos(phi)*cos(theta),7*sin(theta),0,0,0,0,0,1);
+		
+		if(demo && panning) {
+            pan++;
+            phi += M_PI*2 / 1000;
+            theta = 0 + 0.5 * sin(pan * M_PI*2 / 800);
+            if(pan > 1000) {
+                panning = false;
+                if(scramble_next) {
+                    scrambling = true;
+                    scramble_next = false;
+                } else {
+                    // solve next
+                    cube.solve();
+                    solving = true;
+                }
+                pan = 0;
+            }
+		}
+		
+		if(demo && scrambling) {
+		    // make a random move
+		    if(!cube.Moving()) {
+                cube.ShowMove(a_twist_string[(int)rand()%18], 0.2);
+                scram++;
+                if(scram > 100) {
+                    scrambling = false;
+                    panning = true;
+                    scram = 0;
+                }
+		    }
+		}
+		
         //cube.ShowNextMove();
         cube.UpdatePositions();
 		cube.draw();
 		// Show the frame
 		SDL_GL_SwapBuffers();
-		
-		if(solving)
+		if(solving){
 			cube.ShowNextMove();
+			if(cube.FinishedSolve()) {
+                solving = false;
+                panning = true;
+                scramble_next = true;
+			}
+		}
+		
+		if(capturing) {
+	        // show the capture process
+	        IplImage* cframe;
+            
+            while(1) {
+                cframe = cvQueryFrame( capture );
+                cvShowImage("Rubiks", cframe);
+                if( (cvWaitKey(10) & 255) == 27 ) break;
+            } 
+            CvSeq* sides = f.read_frame(cframe);
 
-	    while (SDL_PollEvent(&event))
+            printf("Found %d sides\n", sides->total);
+
+            for(int i = 0; i < sides->total; i++) {
+                Side* s = (Side*)cvGetSeqElem(sides, i);
+                cube.read_side(s);
+            }
+            cube.update();
+            capturing = false;
+		}
+		
+		if(capturing_demo) {
+	        // show the capture process
+	        IplImage* cframe;
+            
+            while(1) {
+                cframe = cvQueryFrame( capture );
+                CvSeq* sides = f.read_frame(cframe);
+                if( (cvWaitKey(10) & 255) == 27 ) break;
+            } 
+		}
+		
+		
+		
+		
+        
+	    while(SDL_PollEvent(&event))
 	    {
 	        switch (event.type)
 	        {
@@ -79,7 +160,34 @@ int main(int argc, char** argv)
 					if (event.key.keysym.sym == SDLK_ESCAPE) running = false;
 					break;
 				case SDL_KEYUP:
-				if (event.key.keysym.sym == SDLK_RIGHT) solving = true;;
+				    if (event.key.keysym.sym == SDLK_RIGHT) solving = true;
+				    if(event.key.keysym.sym == SDLK_d) {
+				        if(demo) {
+                            demo = false;
+				        } else {
+                            demo = true;
+				        }
+				    }
+				    
+				    if(event.key.keysym.sym == SDLK_i) {
+				        if(capturing) {
+                            capturing = false;
+                            cvDestroyWindow("Rubiks");
+				        } else {
+                            capturing = true;
+                            cvNamedWindow("Rubiks", 1);
+				        }
+				    }
+				    
+				    if(event.key.keysym.sym == SDLK_o) {
+				        if(capturing_demo) {
+                            capturing_demo = false;
+                            cvDestroyWindow("Rubiks");
+				        } else {
+                            capturing_demo = true;
+                            cvNamedWindow("Rubiks", 1);
+				        }
+				    }
 					//if (event.key.keysym.sym == SDLK_LEFT) cube.StepBack();
 					break;
 				case SDL_MOUSEBUTTONDOWN:
@@ -122,7 +230,7 @@ int main(int argc, char** argv)
 				case SDL_QUIT:
 					running = false;
 			}
-	    }     
+	    }   
     }
 
     

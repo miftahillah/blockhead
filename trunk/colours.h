@@ -1,6 +1,7 @@
 bool compare_pixels(CvScalar target, CvPoint* i);
 bool compare_pixels(CvScalar target, CvScalar hsv);
 void find_colour(CvScalar hsv);
+CvScalar get_colour(int i);
 
 // define colours such that those opposite are 3 spaces apart
 /*Green -> blue

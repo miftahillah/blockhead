@@ -48,7 +48,8 @@ struct SeriesPeaks {
 
 class CubeFinder{
 public:
-	IplImage* read_frame(IplImage* cframe);
+	CvSeq* read_frame(IplImage* cframe);
+	CvSeq* read_frame(IplImage* cframe, bool correct);
     void draw();
 	CvSeq* final_faces;
 	IplImage* final_frame;
@@ -58,6 +59,15 @@ private:
 	
 };
 
+struct Correction{
+    IplImage* frame;
+    CvSeq* faces;
+    bool finished;
+};
+
+void click_callback(int event, int x, int y, int flags, void* param);
+void print_faces(CvSeq* faces);
+void correct_detection(Correction* c);
 IplImage* isolate_cube(IplImage* cframe);
 void flood_face(CvPoint i, CvScalar target, Face* face);
 bool faces_collide(Face* f1, Face* f2);

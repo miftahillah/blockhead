@@ -10,64 +10,63 @@ void find_colour(CvScalar hsv, Face* face) {
     //printf("HSV = [%d %d %d] ", hue, sat, val);
     int r=0, g=0, b=0;
     if(val < 20) {
-        // this is probably black
-        r = 0;
-        g = 0;
-        b = 0;
         face->colour = UNKNOWN;
     }
     else if( (sat < 20 && val > 100) || (sat < 65 && val > 120 && val < 150) || (val > 200 && sat < 130) || (val > 150 && val < 200 && sat < 150)) {
-        //printf("white!\n");
-        // white
-        r = 255;
-        g = 255;
-        b = 255;
         face->colour = WHITE;
-    } else if( 
-    ((hue > 5 && hue < 9 && sat < 190 )  && (hue < 9 || hue > 140)) && ((sat > 200) || (val < 180 && sat < 200) || (val < 120))) {
-        // red
-        //printf("red!\n");
-        r = 255;
-        g = 0;
-        b = 0;
+    } else if((hue < 9 || hue > 140) && ((val < 180 && sat < 200) || (val < 120))) {
         face->colour = RED;
     } else if( hue < 17) {
-        //printf("orange!\n");
-        // orange
-        r = 255;
-        g = 150;
-        b = 10;
         face->colour = ORANGE;
     } else if ( hue < 40) {
-        //printf("yellow!\n");
-        // yellow
-        r = 230;
-        g = 230;
-        b = 0;
         face->colour = YELLOW;
     } else if (hue < 100) {
-        //printf("green!\n");
-        // green
-        r = 0;
-        g = 255;
-        b = 0;
         face->colour = GREEN;
     } else if (hue < 130) {
-        //printf("blue!\n");
-        // blue
-        r = 0;
-        g = 0;
-        b = 255;
         face->colour = BLUE;
     } else {
-        // ???
-        r = 0;
-        g = 0;
-        b = 0;
         face->colour = UNKNOWN;
     }
     
-    face->rgb = cvScalar(b, g, r);
+    face->rgb = get_colour(face->colour);
+}
+
+CvScalar get_colour(int i) {
+    int r, g, b;
+    switch(i) {
+        case WHITE:
+            r = 255;
+            g = 255;
+            b = 255;
+            break;
+        case RED:
+            r = 255;
+            g = 0;
+            b = 0;
+            break;
+        case ORANGE:
+            r = 255;
+            g = 150;
+            b = 10;
+            break;
+        case YELLOW:
+            r = 230;
+            g = 230;
+            b = 0;
+            break;
+        case GREEN:
+            r = 0;
+            g = 255;
+            b = 0;
+            break;
+        case BLUE:
+            r = 0;
+            g = 0;
+            b = 255;
+            break;
+    }
+    
+    return cvScalar(b, g, r);
 }
 
 bool compare_pixels(CvScalar target, CvScalar hsv) {

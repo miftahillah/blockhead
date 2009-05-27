@@ -7,8 +7,12 @@ void CubeFinder::draw() {
     cube.draw();
 }
 
+CvSeq* CubeFinder::read_frame(IplImage* cframe) {
+    return read_frame(cframe, false);
+}
+
 /* search through image data and isolate the image of the rubiks cube */
-IplImage* CubeFinder::read_frame(IplImage* cframe) {
+CvSeq* CubeFinder::read_frame(IplImage* cframe, bool correct) {
 	CvMemStorage* possible_cross_storage = cvCreateMemStorage(0);
     CvSeq* possible_cross_line = cvCreateSeq( CV_SEQ_ELTYPE_POINT|CV_32SC2, 
         sizeof(CvSeq), sizeof(CvPoint), possible_cross_storage );
@@ -24,25 +28,60 @@ IplImage* CubeFinder::read_frame(IplImage* cframe) {
 
 	// find candidate faces, which are areas of solid colour
 	find_candidate_faces(faces, possible_cross_line);
+    printf("Found %d candidate faces\n", faces->total);
 
 	// search around the faces we've found to add any missing faces
 	find_missing_faces(faces);
+	printf("Found %d candidate faces after missing\n", faces->total);
 	
 	// get rid of faces at irregular angles / large areas
-    //exclude_invalid_faces(faces);
+    exclude_invalid_faces(faces);
+    printf("Found %d faces after removing bad ones\n", faces->total);
 
    	// find the dominant angles in image and group faces
 	SeriesPeaks peak = find_dominant_angles(faces);
 	
     split_double_faces(faces, peak);
+    printf("Found %d faces after splitting double\n", faces->total);
     
 	// now sort the faces into sides -> 3x3 grid
 	CvMemStorage* side_storage = cvCreateMemStorage(0);
     CvSeq* sides = cvCreateSeq( 0, 
-        sizeof(CvSeq), sizeof(Side), possible_face_storage );
+        sizeof(CvSeq), sizeof(Side), side_storage );
+        
+    Correction c;
+    
+    printf("Started with %d faces\n", faces->total);
+    
+    c.frame = cframe;
+    c.faces = faces;
+    c.finished = false;
+    
+    if(correct) {
+        correct_detection(&c);
+
+        printf("Ended up with %d faces\n", faces->total);
+
+        print_faces(faces);
+    } 
+
+    
+    peak = find_dominant_angles(faces);
 	
 	// produce 3x3 arrays of sides
 	align_sides(faces, sides, peak);
+	
+	for(int i = 0; i < sides->total; i++) {
+        Side* s = (Side*)cvGetSeqElem(sides, i);
+        if(i == 1) {
+            for(int j = 0; j < 3; j++) {
+                int tmp = s->face[0][j];
+                s->face[0][j] = s->face[2][j];
+                s->face[2][j] = tmp;
+            }
+        }
+        cube.read_side(s);
+    }
 	
 	// read each side into the rubiks cube
 	for(int i = 0; i < sides->total; i++) {
@@ -68,12 +107,13 @@ IplImage* CubeFinder::read_frame(IplImage* cframe) {
         }
         printf("\n\n\n");
         
-		cube.read_side(side);
+		//cube.read_side(side);
 	}
 	
     //cube.align_sides();
     
 	colour_result(cframe, faces);
+    cvShowImage("Rubiks", cframe);
 	
 	/*
 	if(faces->total > 6) {
@@ -95,12 +135,67 @@ IplImage* CubeFinder::read_frame(IplImage* cframe) {
 	cvClearMemStorage(possible_face_storage);	
 	cvClearSeq(possible_cross_line);
 	cvClearMemStorage(possible_cross_storage);
-	cvClearSeq(sides);
-	cvClearMemStorage(side_storage);
+	//cvClearSeq(sides);
+	//cvClearMemStorage(side_storage);
 	
 	cvReleaseImage( &HSV);
 	
-	return cframe;
+    return sides;
+	//return cframe;
+}
+
+void correct_detection(Correction *c) {
+    // make a note of the original image
+    IplImage* original = cvCloneImage(c->frame);
+    
+    IplImage* f = cvCloneImage(c->frame);
+    
+    colour_result(f, c->faces);
+    
+    cvShowImage("Rubiks", f);
+    
+	cvSetMouseCallback("Rubiks", 
+      click_callback, 
+      (void*) c 
+    );
+    
+    cvWaitKey(0);
+}
+
+void click_callback(int event, int x, int y, int flags, void* param) {
+    Correction* c = (Correction*) param;
+    
+    // find where the click was made
+    if(event == CV_EVENT_LBUTTONUP) {
+       // find the face
+        printf("Found mouse up at (%d, %d)\n", x, y);
+        int i = inside_face(c->faces, cvPoint(x, y));
+        if(i > 0) {
+            Face* f = (Face*)cvGetSeqElem(c->faces, i);
+            f->colour++;
+            if(f->colour > 5) {
+                f->colour = 0;
+            }
+            printf("incremented face %d (now %d)\n", i, f->colour);
+        }
+        // redraw
+        IplImage* n = cvCloneImage(c->frame);
+        colour_result(n, c->faces);
+        cvShowImage("Rubiks", n);
+    }
+    
+    if(event == CV_EVENT_RBUTTONUP) {
+        // find the face
+         printf("Found mouse up at (%d, %d)\n", x, y);
+         int i = inside_face(c->faces, cvPoint(x, y));
+         if(i > 0) {
+             cvSeqRemove(c->faces, i);
+         }
+         // redraw
+         IplImage* n = cvCloneImage(c->frame);
+         colour_result(n, c->faces);
+         cvShowImage("Rubiks", n);
+    }
 }
 
 void print_face(int i) {
@@ -175,7 +270,7 @@ void find_possible_cross_lines(CvSeq* possible_cross_line, IplImage* cframe) {
 			this reduces time taken by this function on cube6.jpg
 			from 12.9mS to 2.9mS
 			*/
-			if(abs(x1 - x0) > 100 || abs(y1 - y0) > 100) {
+			if(abs(x1 - x0) > 150 || abs(y1 - y0) > 150) {
 				continue;
 			}
 
@@ -480,7 +575,7 @@ void split_face(CvSeq* faces, Face* f, CvPoint m1, CvPoint m2) {
 }
 
 void shift_faces(CvSeq* faces, CvSeq* queue, Side* side, int p, int x, int y) {
-    printf("Shifting faces\n");
+    //printf("Shifting faces\n");
 	for(int i = 0; i < faces->total; i++) {
 		Face* f = (Face*)cvGetSeqElem(faces, i);
 		
@@ -599,10 +694,9 @@ void align_sides(CvSeq* faces, CvSeq* sides, SeriesPeaks peak) {
 				*/
 
                 bool changed = false;
-				int total = queue->total;
-				for(int i = 0; i < total; i++) {
+				while(queue->total > 0) {
                     // search around for faces
-                    Face* f = (Face*)cvGetSeqElem(queue, i);
+                    Face* f = (Face*)cvGetSeqElem(queue, 0);
 					int qx1 = inside_face(faces, cvPoint(f->cen.x - dx1, f->cen.y - dy1));
 					int qx2 = inside_face(faces, cvPoint(f->cen.x + dx1, f->cen.y + dy1));
 					int qy1 = inside_face(faces, cvPoint(f->cen.x - dx2, f->cen.y - dy2));
@@ -707,12 +801,8 @@ void align_sides(CvSeq* faces, CvSeq* sides, SeriesPeaks peak) {
 							}
                         }
                     }
+                    cvSeqRemove(queue, 0);
                 }
-
-				for(int i = 0; i < total; i++) {
-					// now remove this from the queue
-                    cvSeqRemove(queue, i);
-				}
 				
                 if(!changed)
                     exploring = false;
@@ -1030,7 +1120,7 @@ bool inside_face(Face* face, CvPoint point) {
     int s3 = side(&face->p3, &face->p4, &point);
     int s4 = side(&face->p4, &face->p1, &point);
     
-    if( s1 == s2 && s2 == s3 && s3 == s4 && s4 == -1) {
+    if( s1 == s2 && s2 == s3 && s3 == s4) {
         //printf("[%d %d %d %d]\n", s1, s2, s3, s4);
         return true;
     }
@@ -1271,6 +1361,9 @@ IntersectionResult intersection(CvPoint* p1, CvPoint* p2, CvPoint* p3, CvPoint* 
 }
 
 bool valid_face_angles(Face* face) {
+    if(!inside_face(face, face->cen)) {
+        return false;
+    }
     int dy11 = face->p2.y - face->p1.y;
 	int dx11 = face->p2.x - face->p1.x;
 	int dy12 = face->p3.y - face->p4.y;
@@ -1362,6 +1455,10 @@ bool valid_face_angles(Face* face) {
     face->length2 = length2;
     
     face->area = length1*length2;
+    
+    if(length1 < length2 * 0.2 || length2 < length1 * 0.8) {
+        return false;
+    }
 	
 	if((abs(t11 - t12) > 10 && abs(t11 - t12) < 170) || (abs(t21 - t22) > 10 && abs(t21 - t22) < 170)) {
 	    // lines are very different angles, probably not a face on the cube
@@ -1381,7 +1478,7 @@ void exclude_invalid_faces(CvSeq* faces) {
     int i =0;
     while(i < faces->total) {
         Face* face = (Face*)cvGetSeqElem(faces, i);
-        if(face->area > avg_area * 2.5) {
+        if(face->area > avg_area * 2.5 || face->area < avg_area * 0.6) {
             face = NULL;
             cvSeqRemove(faces, i);
         } else {
@@ -1415,11 +1512,7 @@ SeriesPeaks group_peaks(int *line_direction) {
 	Link it to its closest peak
 	*/
 	
-    printf("d = [");
-for(int i = 0;i < 180; i++) {
-    printf("%d ", line_direction[i]);
-}
-printf("];\n");
+
 	
 	/**
     reduce the resolution of the graph to 10 different directions
@@ -1431,16 +1524,6 @@ printf("];\n");
     for(int i = 0; i < 180; i++) {
         low_range_line_direction[(int)(((double)i/(double)18.0)+0.5)] += line_direction[i];
     }
-    printf("dir = [");
-    for(int i = 0; i < 10; i++) {
-        printf("%d ", low_range_line_direction[i]);
-    }
-    printf("];\n");
-    printf("a = [");
-    for(int i = 0; i < 10; i++) {
-        printf("%d ", i*18);
-    }
-    printf("];\n");
     
     
     for(int i = 0; i < 10; i++) {
@@ -1455,12 +1538,6 @@ printf("];\n");
             low_range_line_direction[i] = 0;
         }
     }
-    
-    printf("dir2 = [");
-    for(int i = 0; i < 10; i++) {
-        printf("%d ", low_range_line_direction[i]);
-    }
-    printf("];\n");
     
     // count the number of peaks
     peak.num_peaks = 0;
@@ -1508,19 +1585,6 @@ printf("];\n");
     for(int i = 0; i < peak.num_peaks; i++) {
         peak.peak_avg[i] = 0;
     }
-    
-    printf("g = [");
-    for(int i = 0; i < peak.num_peaks; i++) {
-        for(int j = 0; j < 180; j++) {
-            if(peaks[closest_peak[j]] == i) {
-                printf("%d ", line_direction[j]);
-            } else {
-                printf("0 ");
-            }
-        }
-        printf("; ");
-    }
-    printf("]\n");
     
     /**
     Need to cope with angles < 5 and > 175 being grouped together
@@ -1597,12 +1661,12 @@ int pt_dist_from_line(CvPoint pt1, CvPoint pt2, CvPoint point) {
 void colour_result(IplImage* cframe, CvSeq* faces) {
 	for(int i = 0; i < faces->total; i++) {
 	    Face* face = (Face*)cvGetSeqElem(faces, i);
-
-
-		cvLine( cframe, face->p1, face->p2, face->rgb, 3, 8 );
-	    cvLine( cframe, face->p2, face->p3, face->rgb, 3, 8 );
-	    cvLine( cframe, face->p3, face->p4, face->rgb, 3, 8 );
-	    cvLine( cframe, face->p4, face->p1, face->rgb, 3, 8 );
+		cvLine( cframe, face->p1, face->p2, get_colour(face->colour), 2, 8 );
+	    cvLine( cframe, face->p2, face->p3, get_colour(face->colour), 2, 8 );
+	    cvLine( cframe, face->p3, face->p4, get_colour(face->colour), 2, 8 );
+	    cvLine( cframe, face->p4, face->p1, get_colour(face->colour), 2, 8 );
+	    
+        cvCircle(cframe, face->cen, 3, get_colour(face->colour), 3);
 
 	    CvScalar dir1Colour, dir2Colour;
 	    switch(face->dir1) {
@@ -1650,4 +1714,17 @@ void colour_result(IplImage* cframe, CvSeq* faces) {
 	    cvCircle(cframe, cvPoint(face->p4.x, face->p4.y), 3, CV_RGB(0,0,0), 3);
 
 	}
+}
+
+void print_faces(CvSeq* faces) {
+    for(int i = 0; i < faces->total; i++) {
+        Face* f = (Face*)cvGetSeqElem(faces, i);
+        print_face(f->colour);
+        printf(" at [%d, %d] (%d, %d) {%d, %d}->{%d, %d} -> {%d, %d} -> {%d, %d}\n", f->cen.x, f->cen.y, f->length1, f->length2,
+            f->p1.x, f->p1.y,
+            f->p2.x, f->p2.y,
+            f->p3.x, f->p3.y,
+            f->p4.x, f->p4.y
+        );
+    }
 }
