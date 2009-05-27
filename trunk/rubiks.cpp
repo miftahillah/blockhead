@@ -13,6 +13,7 @@
 #include "colours.cpp"
 #include "CubeFinder.cpp"
 #include "RubiksCube.cpp"
+#include "click.cpp"
 #include <unistd.h>
 
 int main(int argc, char** argv)
@@ -50,6 +51,7 @@ int main(int argc, char** argv)
     bool panning = true;
     bool capturing = false;
     bool capturing_demo = false;
+    bool just_existed = false;
     int scram = 0, pan = 0;
     
     bool initialised = true;

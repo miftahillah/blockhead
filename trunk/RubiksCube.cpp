@@ -241,7 +241,7 @@ RubiksCube::RubiksCube() {
 		for(yn = 0; yn < 3; yn++) {
 			for(zn = 0; zn < 3; zn++) {
 				// set up cube
-                cubes[xn][yn][zn] = new Cubelet();
+                cubes[xn][yn][zn] = new Cubelet(xn, yn, zn);
                 cubes[xn][yn][zn]->init();
 			}
 		}

@@ -3,9 +3,9 @@
 
 // each point corresponds to a corner
 
-Cubelet::Cubelet() {
+Cubelet::Cubelet(int xn, int yn, int zn) {
     for(int i = 0; i < 6; i++) {
-        face[i] = new Facelet();
+        face[i] = new Facelet(xn, yn, zn, i);
     }
 }
 

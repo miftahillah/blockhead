@@ -2,6 +2,11 @@
 #include "Facelet.h"
 
 Facelet::Facelet() {
+    
+}
+
+Facelet::Facelet(int xn, int yn, int zn, int fn) {
+    fid = fn + (zn*6) + (yn*3*6) + (xn * 3 * 3 * 6);
 }
 
 void Facelet::setFace(double *f[4], int n) {
@@ -20,6 +25,7 @@ void Facelet::setFace(double *f[4], int n) {
 void Facelet::draw() {
 	// draw each face
 	glColor3d(r, g, b);
+	glLoadName(fid);
 	glBegin(GL_QUADS);
 		for(int n=0;n<4;++n)
 			glVertex3d(v[n][0],v[n][1],v[n][2]);

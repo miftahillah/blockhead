@@ -1,10 +1,13 @@
 #pragma once
 
 class Facelet {
+    
 public:
 	// define the colour of the face
+    Facelet(int xn, int yn, int zn, int fn);
     Facelet();
 	double r, g, b;
+    int fid;
 	
     float v[4][3];
 	

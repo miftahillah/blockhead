@@ -28,7 +28,7 @@ double *REAR[4] = {UBL, UBR, DBR, DBL};
 // 27 Individual cubelets make up the entire cube
 class Cubelet {
 public:
-    Cubelet();
+    Cubelet(int xn, int yn, int zn);
 	// each cubelet has 6 faces
 	void draw();
     void init();
