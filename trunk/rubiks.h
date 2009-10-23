@@ -1,2 +1,0 @@
-IplImage* HSV;
-IplImage* RGB;
