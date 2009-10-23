@@ -229,6 +229,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -272,8 +274,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>10</integer>
-									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -308,8 +308,6 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -327,7 +325,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>E921F78E10908C0B00A4C875</string>
+										<string>E9DB9BAC1091ADF300F50DC6</string>
 										<key>history</key>
 										<array>
 											<string>E90497C7108E2BD900B5C800</string>
@@ -345,7 +343,7 @@
 											<string>E921F76A10908A3F00A4C875</string>
 											<string>E921F77F10908B5A00A4C875</string>
 											<string>E921F78D10908C0B00A4C875</string>
-											<string>E921F78010908B5A00A4C875</string>
+											<string>E921F78E10908C0B00A4C875</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -403,9 +401,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>E921F690109073B800A4C875</string>
+				<string>E9DB9BAD1091ADF300F50DC6</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>E921F691109073B800A4C875</string>
+				<string>E9DB9BAE1091ADF300F50DC6</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -543,13 +541,7 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>E921F78F10908C0B00A4C875</string>
-		<string>E921F6AF10907A6600A4C875</string>
-		<string>E921F69B109073B800A4C875</string>
-		<string>E921F69C109073B800A4C875</string>
-		<string>1CD10A99069EF8BA00B06720</string>
 		<string>E9049440108DE44B00B5C800</string>
-		<string>1C78EAAD065D492600B07095</string>
 		<string>/Users/thomas/projects/Blockhead/Blockhead.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
@@ -574,7 +566,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>RubiksCube.cpp</string>
+								<string></string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -591,8 +583,6 @@
 							<string>203pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -632,7 +622,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>E9049440108DE44B00B5C800</string>
-				<string>E921F692109073B800A4C875</string>
+				<string>E9DB9BAF1091ADF300F50DC6</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>

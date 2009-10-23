@@ -20,6 +20,7 @@
 		E9049464108DE5A800B5C800 /* Side.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9049459108DE5A800B5C800 /* Side.cpp */; };
 		E9049465108DE5A800B5C800 /* Solver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E904945B108DE5A800B5C800 /* Solver.cpp */; };
 		E9049494108DE67D00B5C800 /* OpenCV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9049493108DE67D00B5C800 /* OpenCV.framework */; };
+		E9DB9BB11091AE1000F50DC6 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = E9DB9BB01091AE1000F50DC6 /* icon.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,6 +62,7 @@
 		E904945B108DE5A800B5C800 /* Solver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Solver.cpp; sourceTree = "<group>"; };
 		E904945C108DE5A800B5C800 /* Solver.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = Solver.h; sourceTree = "<group>"; };
 		E9049493108DE67D00B5C800 /* OpenCV.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCV.framework; path = /Users/thomas/Library/Frameworks/OpenCV.framework; sourceTree = "<absolute>"; };
+		E9DB9BB01091AE1000F50DC6 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +133,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E9DB9BB01091AE1000F50DC6 /* icon.icns */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 			);
@@ -196,6 +199,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				E9DB9BB11091AE1000F50DC6 /* icon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,6 +318,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks/OpenCV.framework/Headers",
 					"$(HOME)/Library/Frameworks/SDL.framework/Headers",
 					/Library/Frameworks/SDL.framework/Headers,
 					"$(HEADER_SEARCH_PATHS)",
