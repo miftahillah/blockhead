@@ -13,7 +13,7 @@ struct Face {
     // face defined from p1 -> p2 -> p3 -> p4 -> p1
     CvPoint p1, p2, p3, p4;
     CvScalar rgb;
-	CvPoint cen;
+    CvPoint cen;
     int length1, length2;
     int ang1, ang2;
     int dir1, dir2;
@@ -34,7 +34,7 @@ struct LineInfo {
     int *hue, *sat, *val;
     int start, end;
     CvPoint s, e;
-	bool success;
+    bool success;
 };
 
 struct IntersectionResult {
@@ -50,15 +50,15 @@ struct SeriesPeaks {
 
 class CubeFinder{
 public:
-	CvSeq* read_frame(IplImage* cframe);
-	CvSeq* read_frame(IplImage* cframe, bool correct);
+    CvSeq* read_frame(IplImage* cframe);
+    CvSeq* read_frame(IplImage* cframe, bool correct);
     void draw();
-	CvSeq* final_faces;
-	IplImage* final_frame;
+    CvSeq* final_faces;
+    IplImage* final_frame;
 private:
     //
     RubiksCube cube;
-	
+    
 };
 
 struct Correction{

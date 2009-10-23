@@ -14,20 +14,20 @@
 class Cubelet {
 public:
     Cubelet();
-	// each cubelet has 6 faces
-	void draw();
+    // each cubelet has 6 faces
+    void draw();
     void init();
-	
-	void MakeRoundedSide();
-	void MakeCornerSphere();
-	
+    
+    void MakeRoundedSide();
+    void MakeCornerSphere();
+    
     void set_face(int n, int colour);
     char* description(int f1, int f2, int f3);
     char* description(int f1, int f2);
-	Facelet* face[6];
+    Facelet* face[6];
     void SwapFaces(int f1, int f2, int f3, int f4);
     void RCCW(int a);
     void RCW(int a);
 private:
-	
+    
 };

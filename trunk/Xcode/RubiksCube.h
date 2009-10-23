@@ -21,13 +21,13 @@ private:
     int m_times;
     int m_counter;
     int m_current_step;
-	double m_duration;
+    double m_duration;
     Solution s;
     
 public:
     RubiksCube();
-	bool Moving();
-	void set_solved();
+    bool Moving();
+    void set_solved();
     void read_side(Side* side);
     void draw();
     void align_sides();
@@ -44,17 +44,17 @@ public:
     
     void ShowMove(int move);
     void ShowMove(char *m);
-	void ShowMove(char* m, double duration);
-	
+    void ShowMove(char* m, double duration);
+    
     void UpdatePositions();
     
     void ShowNextMove();
     void RotateSide(int side, int degrees);
-	
-	bool FinishedSolve();
-	
-	void StepForward();
-	void StepBack();
-	
+    
+    bool FinishedSolve();
+    
+    void StepForward();
+    void StepBack();
+    
     bool defined();
 };

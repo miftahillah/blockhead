@@ -16,7 +16,7 @@ void RubiksCube::align_sides() {
     
     int valid = valid_state(0);
     if(valid == 1) {
-		
+        
     } else {
         //
     }
@@ -43,7 +43,7 @@ int RubiksCube::valid_state(int s) {
     int valid = 0;
     // find the next initialised side
     int ns = -1;
-	int j;
+    int j;
     for(j = s+1; j < 6; j++) {
         if(side[j]->has_data) {
             ns = j;
@@ -247,17 +247,17 @@ RubiksCube::RubiksCube() {
     m_times = 0;
     m_counter = 0;
     m_current_step = 0;
-	int xn, yn, zn;
-	for(xn = 0; xn < 3; xn++) {
-		for(yn = 0; yn < 3; yn++) {
-			for(zn = 0; zn < 3; zn++) {
-				// set up cube
+    int xn, yn, zn;
+    for(xn = 0; xn < 3; xn++) {
+        for(yn = 0; yn < 3; yn++) {
+            for(zn = 0; zn < 3; zn++) {
+                // set up cube
                 cubes[xn][yn][zn] = new Cubelet();
                 cubes[xn][yn][zn]->init();
-			}
-		}
-	}
-	
+            }
+        }
+    }
+    
     xSpin = 0;
     ySpin = 0;
     zSpin = 0;
@@ -265,13 +265,13 @@ RubiksCube::RubiksCube() {
     xRot = new int[3];
     yRot = new int[3];
     zRot = new int[3];
-	
+    
     for(int i = 0; i < 3; i++) {
         xRot[i] = 0;
         yRot[i] = 0;
         zRot[i] = 0;
     }
-	
+    
     for(int i = 0; i < 6; i++) {
         side[i] = new Side();
     }
@@ -292,53 +292,53 @@ void RubiksCube::draw() {
     glRotatef(ySpin, 0, 1, 0);
     glRotatef(zSpin, 0, 0, 1);
     // update the faces
-	for(int x = 0; x < 3; x++) {
+    for(int x = 0; x < 3; x++) {
         glRotatef(xRot[x], 1, 0, 0);
-		for(int y = 0; y < 3; y++) {
+        for(int y = 0; y < 3; y++) {
             glRotatef(yRot[y], 0, 1, 0);
-			for(int z = 0; z < 3; z++) {
+            for(int z = 0; z < 3; z++) {
                 glRotatef(zRot[z], 0, 0, 1);
                 
                 glTranslatef(x-1.0f, y-1.0f, z-1.0f);
-				cubes[x][y][z]->draw();
+                cubes[x][y][z]->draw();
                 glTranslatef(1.0f-x, 1.0f-y, 1.0f-z);
                 
                 glRotatef(-zRot[z], 0, 0, 1);
-			}
+            }
             glRotatef(-yRot[y], 0, 1, 0);
-		}
+        }
         glRotatef(-xRot[x], 1, 0, 0);
-	}
-	
+    }
+    
     glRotatef(-zSpin, 0, 0, 1);
     glRotatef(-ySpin, 0, 1, 0);
     glRotatef(-xSpin, 1, 0, 0);
 }
 
 void RubiksCube::set_solved() {
-	for(int i = 0; i < 6; i++) {
-		Side tmp;
-		for(int x = 0; x < 3; x++) {
-			for(int y = 0; y < 3; y++) {
-				tmp.face[x][y] = i;
-			}
-		}
-		read_side(&tmp);
-	}
+    for(int i = 0; i < 6; i++) {
+        Side tmp;
+        for(int x = 0; x < 3; x++) {
+            for(int y = 0; y < 3; y++) {
+                tmp.face[x][y] = i;
+            }
+        }
+        read_side(&tmp);
+    }
 }
 
 
 void RubiksCube::read_side(Side* tmpside) {
     /*
-	 Given a side, try to update the current model of the rubik's cube
-	 Or initialise it if nothing has been set
-	 Opposite sides:
-	 Green -> blue
-	 Red -> orange
-	 yellow -> white
-	 
-	 Hence a red side may border: green, blue, yellow white but never orange
-	 */
+     Given a side, try to update the current model of the rubik's cube
+     Or initialise it if nothing has been set
+     Opposite sides:
+     Green -> blue
+     Red -> orange
+     yellow -> white
+     
+     Hence a red side may border: green, blue, yellow white but never orange
+     */
     
     if(tmpside->face[1][1] >= 0) {
         // we've found the centre face, making this job much easier
@@ -357,10 +357,10 @@ void RubiksCube::read_side(Side* tmpside) {
                 side[s]->border[i][j] = tmpside->border[i][j];
             }
         }
-		side[s]->has_data = true;
+        side[s]->has_data = true;
         printf("side[%d] has data\n", s);
         // now align all sides
-		
+        
     } else {
         // hmm? need a strategy to cope with this
         printf("Skipping face\n");
@@ -468,40 +468,40 @@ char *RubiksCube::find_edge(char* p) {
         }
     }
     printf("\nCouldn't an edge on faces %d, %d\n", f1, f2);
-	char *bad = new char[2];
-	bad[0] = 'X';
-	bad[1] = '\0';
-	return bad;
+    char *bad = new char[2];
+    bad[0] = 'X';
+    bad[1] = '\0';
+    return bad;
 }
 
 char* RubiksCube::get_notation() {
     /*You must pass the cube's position as stdin as so:
-	 
-	 UF UR UB UL DF DR DB DL FR FL BR BL UFR URB UBL ULF DRF DFL DLB DBR
-	 */
+     
+     UF UR UB UL DF DR DB DL FR FL BR BL UFR URB UBL ULF DRF DFL DLB DBR
+     */
     char *state = new char[70];
     sprintf(state, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\0",
-			find_edge("UF"),
-			find_edge("UR"),
-			find_edge("UB"),
-			find_edge("UL"),
-			find_edge("DF"),
-			find_edge("DR"),
-			find_edge("DB"),
-			find_edge("DL"),
-			find_edge("FR"),
-			find_edge("FL"),
-			find_edge("BR"),
-			find_edge("BL"),
-			find_corner("UFR"), 
-			find_corner("URB"),
-			find_corner("UBL"),
-			find_corner("ULF"),
-			find_corner("DRF"), 
-			find_corner("DFL"),
-			find_corner("DLB"),
-			find_corner("DBR")
-			);
+            find_edge("UF"),
+            find_edge("UR"),
+            find_edge("UB"),
+            find_edge("UL"),
+            find_edge("DF"),
+            find_edge("DR"),
+            find_edge("DB"),
+            find_edge("DL"),
+            find_edge("FR"),
+            find_edge("FL"),
+            find_edge("BR"),
+            find_edge("BL"),
+            find_corner("UFR"), 
+            find_corner("URB"),
+            find_corner("UBL"),
+            find_corner("ULF"),
+            find_corner("DRF"), 
+            find_corner("DFL"),
+            find_corner("DLB"),
+            find_corner("DBR")
+            );
     return state;
 }
 
@@ -523,7 +523,7 @@ void RubiksCube::solve() {
     if(!s.solved) {
         printf("No solution\n");
     }
-	
+    
     //printf("Found a solution in %d moves\n", s.steps);
     for(int i = 0; i < s.steps; i++) {
         if(s.solution[i] != -1) {
@@ -559,13 +559,13 @@ void RubiksCube::UpdatePositions() {
             // update start time
             // include diff so there is no accumilated error
             m_start_time = m_start_time + turns*(1000000*m_duration/90);
-			if(m_start_time > 1000000) {
-				m_start_time = 1000000 - m_start_time;
-			}
-			
+            if(m_start_time > 1000000) {
+                m_start_time = 1000000 - m_start_time;
+            }
+            
             if(m_angle >= 90*m_times) {
                 //printf("finished move on m_angle = %d\n", m_angle);
-				m_moving = false;               
+                m_moving = false;               
             }
         }
     }

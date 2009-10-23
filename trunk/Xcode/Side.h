@@ -9,7 +9,7 @@ public:
     one row of 3 for each of the 4 sides
     numbered clockwise
     */
-	int border[4][3];
+    int border[4][3];
     bool has_data;
     void draw();
     void rotate();

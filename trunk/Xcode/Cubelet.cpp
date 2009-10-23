@@ -68,19 +68,19 @@ void Cubelet::RCW(int a) {
 void Cubelet::init() {
     // define geometry
     // Red
-	//printf("Initiating cubelet with side %d=%d\n", TOP, GREEN);
-	face[RED]->setFace(TOP, RED);
-	// Green
-	face[GREEN]->setFace(LEFT, GREEN);
-	// white
-	face[WHITE]->setFace(FRONT, WHITE);
-	// Blue
-	face[BLUE]->setFace(RIGHT, BLUE);
-	// yellow
-	face[YELLOW]->setFace(REAR, YELLOW);
-	// orange
-	face[ORANGE]->setFace(BASE, ORANGE);
-	
+    //printf("Initiating cubelet with side %d=%d\n", TOP, GREEN);
+    face[RED]->setFace(TOP, RED);
+    // Green
+    face[GREEN]->setFace(LEFT, GREEN);
+    // white
+    face[WHITE]->setFace(FRONT, WHITE);
+    // Blue
+    face[BLUE]->setFace(RIGHT, BLUE);
+    // yellow
+    face[YELLOW]->setFace(REAR, YELLOW);
+    // orange
+    face[ORANGE]->setFace(BASE, ORANGE);
+    
     // set face colours to grey
     for(int i = 0; i < 6; i++) {
         set_face(i, -1);
@@ -130,184 +130,184 @@ void Cubelet::set_face(int n, int colour) {
 }
 
 void Cubelet::draw() {
-	
-	for(int n=0;n<6;++n)
-    	face[n]->draw();
-	// now draw the bevels
-	//glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, m_BevelDiffuse);
-	//glMaterialfv(GL_FRONT, GL_SPECULAR, m_BevelMaterial);
-	//glMaterialfv(GL_FRONT, GL_SHININESS, m_BevelShininess);
-	glColor3f(0.2, 0.2, 0.2);
-	glPushMatrix();
-	// Upper, right, back Corner
-	glTranslatef(SIDE_LENGTH/2, SIDE_LENGTH/2, SIDE_LENGTH/2);
-	MakeCornerSphere();
-	
-	// Upper, left, back Corner
-	glTranslatef(-SIDE_LENGTH, 0, 0);
-	glRotatef(90, 0, 0, 1);
-	MakeCornerSphere();
-	glRotatef(-90, 0, 0, 1);
-	
-	// Lower, left, back Corner
-	glTranslatef(0, -SIDE_LENGTH, 0);
-	glRotatef(180, 0, 0, 1);
-	MakeCornerSphere();
-	glRotatef(-180, 0, 0, 1);
-	
-	// Lower, right, back Corner
-	glTranslatef(SIDE_LENGTH, 0, 0);
-	glRotatef(270, 0, 0, 1);
-	MakeCornerSphere();
-	glRotatef(-270, 0, 0, 1);
-	
-	// Upper, right, front Corner
-	glTranslatef(0, SIDE_LENGTH, -SIDE_LENGTH);
-	glRotatef(90, 0, 1, 0);
-	MakeCornerSphere();
-	glRotatef(-90, 0, 1, 0);
-	
-	
-	// Upper, left, front Corner
-	glTranslatef(-SIDE_LENGTH, 0, 0);
-	glRotatef(180, 0, 1, 0);
-	MakeCornerSphere();
-	glRotatef(-180, 0, 1, 0);
-	
-	// Lower, left, front Corner
-	glTranslatef(0, -SIDE_LENGTH, 0);
-	glRotatef(180, 0, 1, 0);
-	glRotatef(90, 1, 0, 0);
-	MakeCornerSphere();
-	glRotatef(-90, 1, 0, 0);
-	glRotatef(-180, 0, 1, 0);
-	
-	// Lower, right, front Corner
-	glTranslatef(SIDE_LENGTH, 0, 0);
-	glRotatef(180, 1, 0, 0);
-	MakeCornerSphere();
-	glRotatef(-180, 1, 0, 0);
-	
-	glTranslatef(0, SIDE_LENGTH, SIDE_LENGTH/2);
-	
-	MakeRoundedSide();
-	
-	glTranslatef(-SIDE_LENGTH, 0, 0);
-	glRotatef(90, 0, 0, 1);
-	MakeRoundedSide();
-	glRotatef(-90, 0, 0, 1);
-	
-	glTranslatef(0, -SIDE_LENGTH, 0);
-	glRotatef(180, 0, 0, 1);
-	MakeRoundedSide();
-	glRotatef(-180, 0, 0, 1);
-	
-	glTranslatef(SIDE_LENGTH, 0, 0);
-	glRotatef(270, 0, 0, 1);
-	MakeRoundedSide();
-	glRotatef(-270, 0, 0, 1);
-	
-	glTranslatef(0, SIDE_LENGTH/2, SIDE_LENGTH/2);
-	glRotatef(90, 1, 0, 0);
-	MakeRoundedSide();
-	
-	glTranslatef(-SIDE_LENGTH, 0, 0);
-	glRotatef(90, 0, 0, 1);
-	MakeRoundedSide();
-	
-	glTranslatef(-SIDE_LENGTH, 0, 0);
-	glRotatef(90, 0, 0, 1);
-	MakeRoundedSide();
-	
-	glTranslatef(-SIDE_LENGTH, 0, 0);
-	glRotatef(90, 0, 0, 1);
-	MakeRoundedSide();
-	
-	glRotatef(-90, 1, 0, 0);
-	glTranslatef(0, SIDE_LENGTH/2, -SIDE_LENGTH/2);
-	
-	MakeRoundedSide();
-	
-	glTranslatef(-SIDE_LENGTH, 0, 0);
-	glRotatef(90, 0, 0, 1);
-	MakeRoundedSide();
-	
-	glTranslatef(-SIDE_LENGTH, 0, 0);
-	glRotatef(90, 0, 0, 1);
-	MakeRoundedSide();
-	
-	glTranslatef(-SIDE_LENGTH, 0, 0);
-	glRotatef(90, 0, 0, 1);
-	MakeRoundedSide();
-	
-	glPopMatrix();
+    
+    for(int n=0;n<6;++n)
+        face[n]->draw();
+    // now draw the bevels
+    //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, m_BevelDiffuse);
+    //glMaterialfv(GL_FRONT, GL_SPECULAR, m_BevelMaterial);
+    //glMaterialfv(GL_FRONT, GL_SHININESS, m_BevelShininess);
+    glColor3f(0.2, 0.2, 0.2);
+    glPushMatrix();
+    // Upper, right, back Corner
+    glTranslatef(SIDE_LENGTH/2, SIDE_LENGTH/2, SIDE_LENGTH/2);
+    MakeCornerSphere();
+    
+    // Upper, left, back Corner
+    glTranslatef(-SIDE_LENGTH, 0, 0);
+    glRotatef(90, 0, 0, 1);
+    MakeCornerSphere();
+    glRotatef(-90, 0, 0, 1);
+    
+    // Lower, left, back Corner
+    glTranslatef(0, -SIDE_LENGTH, 0);
+    glRotatef(180, 0, 0, 1);
+    MakeCornerSphere();
+    glRotatef(-180, 0, 0, 1);
+    
+    // Lower, right, back Corner
+    glTranslatef(SIDE_LENGTH, 0, 0);
+    glRotatef(270, 0, 0, 1);
+    MakeCornerSphere();
+    glRotatef(-270, 0, 0, 1);
+    
+    // Upper, right, front Corner
+    glTranslatef(0, SIDE_LENGTH, -SIDE_LENGTH);
+    glRotatef(90, 0, 1, 0);
+    MakeCornerSphere();
+    glRotatef(-90, 0, 1, 0);
+    
+    
+    // Upper, left, front Corner
+    glTranslatef(-SIDE_LENGTH, 0, 0);
+    glRotatef(180, 0, 1, 0);
+    MakeCornerSphere();
+    glRotatef(-180, 0, 1, 0);
+    
+    // Lower, left, front Corner
+    glTranslatef(0, -SIDE_LENGTH, 0);
+    glRotatef(180, 0, 1, 0);
+    glRotatef(90, 1, 0, 0);
+    MakeCornerSphere();
+    glRotatef(-90, 1, 0, 0);
+    glRotatef(-180, 0, 1, 0);
+    
+    // Lower, right, front Corner
+    glTranslatef(SIDE_LENGTH, 0, 0);
+    glRotatef(180, 1, 0, 0);
+    MakeCornerSphere();
+    glRotatef(-180, 1, 0, 0);
+    
+    glTranslatef(0, SIDE_LENGTH, SIDE_LENGTH/2);
+    
+    MakeRoundedSide();
+    
+    glTranslatef(-SIDE_LENGTH, 0, 0);
+    glRotatef(90, 0, 0, 1);
+    MakeRoundedSide();
+    glRotatef(-90, 0, 0, 1);
+    
+    glTranslatef(0, -SIDE_LENGTH, 0);
+    glRotatef(180, 0, 0, 1);
+    MakeRoundedSide();
+    glRotatef(-180, 0, 0, 1);
+    
+    glTranslatef(SIDE_LENGTH, 0, 0);
+    glRotatef(270, 0, 0, 1);
+    MakeRoundedSide();
+    glRotatef(-270, 0, 0, 1);
+    
+    glTranslatef(0, SIDE_LENGTH/2, SIDE_LENGTH/2);
+    glRotatef(90, 1, 0, 0);
+    MakeRoundedSide();
+    
+    glTranslatef(-SIDE_LENGTH, 0, 0);
+    glRotatef(90, 0, 0, 1);
+    MakeRoundedSide();
+    
+    glTranslatef(-SIDE_LENGTH, 0, 0);
+    glRotatef(90, 0, 0, 1);
+    MakeRoundedSide();
+    
+    glTranslatef(-SIDE_LENGTH, 0, 0);
+    glRotatef(90, 0, 0, 1);
+    MakeRoundedSide();
+    
+    glRotatef(-90, 1, 0, 0);
+    glTranslatef(0, SIDE_LENGTH/2, -SIDE_LENGTH/2);
+    
+    MakeRoundedSide();
+    
+    glTranslatef(-SIDE_LENGTH, 0, 0);
+    glRotatef(90, 0, 0, 1);
+    MakeRoundedSide();
+    
+    glTranslatef(-SIDE_LENGTH, 0, 0);
+    glRotatef(90, 0, 0, 1);
+    MakeRoundedSide();
+    
+    glTranslatef(-SIDE_LENGTH, 0, 0);
+    glRotatef(90, 0, 0, 1);
+    MakeRoundedSide();
+    
+    glPopMatrix();
 }
 
 void Cubelet::MakeRoundedSide() 
 {
-	float StepSize = M_PI/2/ROUND_STEPS;
-	float v, vv;
-	
-	glBegin(GL_QUADS);
-	glColor3f(0, 0, 0);
-	
-	for (int i = 0; i < ROUND_STEPS; i++) 
-	{
-		v = i * StepSize;
-		vv = (i+1)*StepSize;
-		
-		glNormal3f((float)cos(v),(float)sin(v), 0);
-		glVertex3f((float)cos(v) * ROUND_WIDTH, (float)sin(v) * ROUND_WIDTH,  SIDE_LENGTH/2);
-		glVertex3f((float)cos(v) * ROUND_WIDTH, (float)sin(v) * ROUND_WIDTH, -SIDE_LENGTH/2);
-		
-		glNormal3f((float)cos(vv), (float)sin(vv), 0);
-		glVertex3f((float)cos(vv) * ROUND_WIDTH, (float)sin(vv) * ROUND_WIDTH, -SIDE_LENGTH/2);
-		glVertex3f((float)cos(vv) * ROUND_WIDTH, (float)sin(vv) * ROUND_WIDTH,  SIDE_LENGTH/2);
-	}
-	
-	glEnd();
+    float StepSize = M_PI/2/ROUND_STEPS;
+    float v, vv;
+    
+    glBegin(GL_QUADS);
+    glColor3f(0, 0, 0);
+    
+    for (int i = 0; i < ROUND_STEPS; i++) 
+    {
+        v = i * StepSize;
+        vv = (i+1)*StepSize;
+        
+        glNormal3f((float)cos(v),(float)sin(v), 0);
+        glVertex3f((float)cos(v) * ROUND_WIDTH, (float)sin(v) * ROUND_WIDTH,  SIDE_LENGTH/2);
+        glVertex3f((float)cos(v) * ROUND_WIDTH, (float)sin(v) * ROUND_WIDTH, -SIDE_LENGTH/2);
+        
+        glNormal3f((float)cos(vv), (float)sin(vv), 0);
+        glVertex3f((float)cos(vv) * ROUND_WIDTH, (float)sin(vv) * ROUND_WIDTH, -SIDE_LENGTH/2);
+        glVertex3f((float)cos(vv) * ROUND_WIDTH, (float)sin(vv) * ROUND_WIDTH,  SIDE_LENGTH/2);
+    }
+    
+    glEnd();
 }
 
 void Cubelet::MakeCornerSphere() 
 {
-	float StepSize = M_PI/2/ROUND_STEPS;
-	float v, w, vv, ww;
-	
-	glBegin(GL_QUADS);
-	glColor3f(0, 0, 0);
-	
-	for (int i = 0; i < ROUND_STEPS; i++) 
-	{
-		v = i * StepSize;
-		vv = (i+1)*StepSize;
-		
-		for (int j = 0; j < ROUND_STEPS; j++) 
-		{
-			w = j * StepSize;
-			ww = (j+1) * StepSize;
-			
-			glNormal3f((float)cos(v) * (float)cos(w), (float)cos(v) * (float)sin(w),(float) sin(v));
-			glVertex3f((float)cos(v) * (float)cos(w) * ROUND_WIDTH,
-					   (float)cos(v) * (float)sin(w) * ROUND_WIDTH,
-					   (float)sin(v) * ROUND_WIDTH);
-			
-			glNormal3f((float)cos(vv) * (float)cos(w), (float)cos(vv) * (float)sin(w), (float)sin(vv));
-			glVertex3f((float)cos(vv) * (float)cos(w) * ROUND_WIDTH,
-					   (float)cos(vv) * (float)sin(w) * ROUND_WIDTH,
-					   (float)sin(vv) * ROUND_WIDTH);
-			
-			glNormal3f((float)cos(vv) * (float)cos(ww), (float)cos(vv) * (float)sin(ww), (float)sin(vv));
-			glVertex3f((float)cos(vv) * (float)cos(ww) * ROUND_WIDTH,
-					   (float)cos(vv) * (float)sin(ww) * ROUND_WIDTH,
-					   (float)sin(vv) * ROUND_WIDTH);
-			
-			glNormal3f((float)cos(v) * (float)cos(ww), (float)cos(v) * (float)sin(ww), (float)sin(v));
-			glVertex3f((float)cos(v) * (float)cos(ww) * ROUND_WIDTH,
-					   (float)cos(v) * (float)sin(ww) * ROUND_WIDTH,
-					   (float)sin(v) * ROUND_WIDTH);
-		}
-	}
-	glEnd();
+    float StepSize = M_PI/2/ROUND_STEPS;
+    float v, w, vv, ww;
+    
+    glBegin(GL_QUADS);
+    glColor3f(0, 0, 0);
+    
+    for (int i = 0; i < ROUND_STEPS; i++) 
+    {
+        v = i * StepSize;
+        vv = (i+1)*StepSize;
+        
+        for (int j = 0; j < ROUND_STEPS; j++) 
+        {
+            w = j * StepSize;
+            ww = (j+1) * StepSize;
+            
+            glNormal3f((float)cos(v) * (float)cos(w), (float)cos(v) * (float)sin(w),(float) sin(v));
+            glVertex3f((float)cos(v) * (float)cos(w) * ROUND_WIDTH,
+                       (float)cos(v) * (float)sin(w) * ROUND_WIDTH,
+                       (float)sin(v) * ROUND_WIDTH);
+            
+            glNormal3f((float)cos(vv) * (float)cos(w), (float)cos(vv) * (float)sin(w), (float)sin(vv));
+            glVertex3f((float)cos(vv) * (float)cos(w) * ROUND_WIDTH,
+                       (float)cos(vv) * (float)sin(w) * ROUND_WIDTH,
+                       (float)sin(vv) * ROUND_WIDTH);
+            
+            glNormal3f((float)cos(vv) * (float)cos(ww), (float)cos(vv) * (float)sin(ww), (float)sin(vv));
+            glVertex3f((float)cos(vv) * (float)cos(ww) * ROUND_WIDTH,
+                       (float)cos(vv) * (float)sin(ww) * ROUND_WIDTH,
+                       (float)sin(vv) * ROUND_WIDTH);
+            
+            glNormal3f((float)cos(v) * (float)cos(ww), (float)cos(v) * (float)sin(ww), (float)sin(v));
+            glVertex3f((float)cos(v) * (float)cos(ww) * ROUND_WIDTH,
+                       (float)cos(v) * (float)sin(ww) * ROUND_WIDTH,
+                       (float)sin(v) * ROUND_WIDTH);
+        }
+    }
+    glEnd();
 }
 
 bool desc_comp(int *items, int i, char* p) {
@@ -341,7 +341,7 @@ bool desc_type(int* items, int i, char* p) {
                             return true;
                         }
                     }
-					
+                    
                 }
             }
         }
