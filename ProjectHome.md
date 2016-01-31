@@ -1,0 +1,3 @@
+The Rubik's cube is an iconic puzzle which has confused people for generations. This project develops a means of solving one using a standard web cam and displays the solution using 3D graphics.
+
+This project presents a robust method for the feature extraction of a Rubik's cube in order to determine the particular configuration of the cube being solved. The features found from image processing are mapped to a 3D reconstruction of a Rubik's cube, and a solution is found. Finally the 3D model is used to display the moves required to solve the cube.
